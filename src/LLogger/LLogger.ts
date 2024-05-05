@@ -1,9 +1,9 @@
 import bunyan from "bunyan";
-import { MMLoggerMetadata } from "./MMLogger.types";
+import { LLoggerMetadata } from "./LLogger.types";
 import httpContext from "express-http-context";
-import MMLoggerStreamWrapper from "./MMLoggerStreamWrapper";
+import LLoggerStreamWrapper from "./LLoggerStreamWrapper";
 
-export const MM_LOGGER_HTTP_CONTEXT_KEY = "MLOGKEY";
+export const LYTIX_LOGGER_HTTP_CONTEXT_KEY = "LXLOGKEY";
 
 /**
  * Main Lytix Logger.
@@ -12,9 +12,9 @@ export const MM_LOGGER_HTTP_CONTEXT_KEY = "MLOGKEY";
  * - Running with a HTTP context (e.g. express server): Metadata is saved in the http context, and is unique per request
  * - Running standalone (e.g. in a script): Metadata is saved in the class itself and persists for the entire life of the class
  */
-export class MMLogger {
+export class LLogger {
   private logger: bunyan;
-  private metadata?: MMLoggerMetadata;
+  private metadata?: LLoggerMetadata;
   /**
    * Whether to log to the console or via bunyan
    */
@@ -28,7 +28,7 @@ export class MMLogger {
         { type: "stream", stream: process.stdout, level: "trace" as const },
         {
           type: "stream",
-          stream: new MMLoggerStreamWrapper(),
+          stream: new LLoggerStreamWrapper(),
           /**
            * We only want info and above to push to our server
            * @todo
@@ -46,10 +46,10 @@ export class MMLogger {
    * Gets the metadata from the http context
    */
   getMetadataFromHttpContext(): string | undefined {
-    return httpContext.get(MM_LOGGER_HTTP_CONTEXT_KEY);
+    return httpContext.get(LYTIX_LOGGER_HTTP_CONTEXT_KEY);
   }
 
-  public setMetadata(metadata: MMLoggerMetadata): void {
+  public setMetadata(metadata: LLoggerMetadata): void {
     /**
      * Use the express http context to set this metadata
      */
@@ -136,7 +136,7 @@ export class MMLogger {
   /**
    * Gets metadata from storage (either HTTP contet or class)
    */
-  private getMetadataFromStorage(): MMLoggerMetadata {
+  private getMetadataFromStorage(): LLoggerMetadata {
     let metadata = this.metadata ?? {};
     if (httpContext.ns.active) {
       metadata = httpContext.get("metadata");
@@ -147,7 +147,7 @@ export class MMLogger {
   /**
    * Get metadata needed when an error is triggered
    */
-  getMetadata(): MMLoggerMetadata {
+  getMetadata(): LLoggerMetadata {
     return this.getMetadataFromStorage();
   }
 }

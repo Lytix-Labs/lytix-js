@@ -1,6 +1,6 @@
 import { NextFunction, Response, Request } from "express";
 import metricCollector from "../MetricCollector";
-import { MMLogger } from "../MMLogger/MMLogger";
+import { LLogger } from "../LLogger/LLogger";
 
 /**
  * Log this error to our server, with the metadata of the
@@ -10,7 +10,7 @@ export function AnalyticRequestHandler(
   req: Request,
   res: Response,
   next: NextFunction,
-  mmLogger: MMLogger
+  mmLogger: LLogger
 ) {
   const startTime = new Date();
   /**

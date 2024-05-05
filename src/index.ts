@@ -4,12 +4,12 @@
 
 import { ErrorRequestHandler } from "./ErrorRequestHandler/ErrorRequestHandler";
 import MetricCollector from "./MetricCollector/index";
-import { MMLogger } from "./MMLogger/MMLogger";
+import { LLogger } from "./LLogger/LLogger";
 import { AnalyticRequestHandler } from "./AnalyticRequestHandler/AnalyticRequestHandler";
 
 export {
   ErrorRequestHandler,
-  MMLogger,
+  LLogger as MMLogger,
   MetricCollector,
   AnalyticRequestHandler,
 };

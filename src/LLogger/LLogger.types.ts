@@ -3,6 +3,6 @@
  * 1. Used in the Logger
  * 2. Be reported to Lytix HQ
  */
-export interface MMLoggerMetadata {
+export interface LLoggerMetadata {
   [key: string]: string | boolean | number;
 }

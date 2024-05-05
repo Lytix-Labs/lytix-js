@@ -1,11 +1,11 @@
 import express from "express";
-import { MMLogger } from "../../MMLogger/MMLogger";
+import { LLogger } from "../../LLogger/LLogger";
 import httpContext from "express-http-context";
 import metricCollector from "../../MetricCollector";
 import { AnalyticRequestHandler } from "../../AnalyticRequestHandler/AnalyticRequestHandler";
 import { ErrorRequestHandler } from "../../ErrorRequestHandler/ErrorRequestHandler";
 
-const mmLogger = new MMLogger("ExpressExample");
+const mmLogger = new LLogger("ExpressExample");
 
 const app = express();
 

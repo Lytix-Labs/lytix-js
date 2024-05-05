@@ -1,5 +1,5 @@
-import { MMLogger } from "../MMLogger/MMLogger";
-import { MM_API_KEY, MM_BASE_URL } from "../envVars";
+import { LLogger } from "../LLogger/LLogger";
+import { LX_API_KEY, LX_BASE_URL } from "../envVars";
 
 /**
  * Main class to collect and report metrics
@@ -8,11 +8,11 @@ import { MM_API_KEY, MM_BASE_URL } from "../envVars";
 export class MetricCollector {
   private apiKey: string;
   private baseURL: string;
-  private logger: MMLogger;
+  private logger: LLogger;
   constructor() {
-    this.apiKey = MM_API_KEY;
-    this.baseURL = new URL("v1/metrics", MM_BASE_URL).href;
-    this.logger = new MMLogger("mm-metrics-collector", { console: true });
+    this.apiKey = LX_API_KEY;
+    this.baseURL = new URL("v1/metrics", LX_BASE_URL).href;
+    this.logger = new LLogger("mm-metrics-collector", { console: true });
   }
 
   /**
@@ -32,7 +32,7 @@ export class MetricCollector {
     const url = `${this.baseURL}${endpoint}`;
     const headers = {
       "Content-Type": "application/json",
-      "mm-api-key": this.apiKey,
+      "lx-api-key": this.apiKey,
     };
     const res = await fetch(url, {
       method: "POST",
@@ -98,17 +98,4 @@ export class MetricCollector {
       ...(metricMetadata ? metricMetadata : {}),
     });
   }
-
-  // /**
-  //  * Capture an error and bundle up logs to send as well
-  //  */
-  // public async captureErrorAndTrace(
-  //   error: Error,
-  //   logs: { [key: string]: any }[]
-  // ) {
-  //   await this.sendPostRequest("/errorAndTrace", {
-  //     error,
-  //     logs,
-  //   });
-  // }
 }

@@ -1,14 +1,13 @@
-export const MM_BASE_URL =
-  process.env.MM_API_URL ?? "https://btszl.getsparechange.com";
-export const MM_API_KEY = process.env.MM_API_KEY ?? "";
+export const LX_BASE_URL = process.env.LX_API_URL ?? "https://api.lytix.co";
+export const LX_API_KEY = process.env.LX_API_KEY ?? "";
 
 function validate(): void {
-  if (!MM_API_KEY) {
-    console.error(`MetricMongrel ERROR: Missing: MM_API_KEY`);
+  if (!LX_API_KEY) {
+    console.error(`Lytix ERROR: Missing: LX_API_KEY`);
   }
 
-  if (!MM_BASE_URL) {
-    console.error(`MetricMongrel ERROR: Missing: MM_BASE_URL`);
+  if (!LX_BASE_URL) {
+    console.error(`Lytix ERROR: Missing: LX_BASE_URL`);
   }
 }
 

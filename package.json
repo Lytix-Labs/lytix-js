@@ -1,6 +1,6 @@
 {
   "name": "@lytix/client",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Official Lytix Client Packages",
   "main": "dist/index.js",
   "exports": {
@@ -25,5 +25,6 @@
     "bunyan": "^1.8.15",
     "express-http-context": "^1.2.4",
     "typescript": "^5.4.5"
-  }
+  },
+  "types": "./dist/index.d.ts"
 }
