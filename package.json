@@ -1,0 +1,29 @@
+{
+  "name": "@metric-mongrel/client",
+  "version": "0.3.3",
+  "description": "Official Metric Mongrel Client Packages",
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "express-example": "npm run build && node ./dist/examples/ExpressExample/index.js",
+    "postinstall": "npm run build",
+    "prepublish": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Metric Mongrel",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "express": "^4.19.2"
+  },
+  "dependencies": {
+    "@types/bunyan": "^1.8.11",
+    "axios": "^1.6.7",
+    "bunyan": "^1.8.15",
+    "express-http-context": "^1.2.4",
+    "typescript": "^5.4.5"
+  }
+}
