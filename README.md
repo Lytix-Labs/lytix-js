@@ -1,16 +1,16 @@
-# Metric Mongrel Client NPM Packages
+# Lytix Client NPM Packages
 
-This directory contains all the NPM packages for the Metric Mongrel project.
+This directory contains all the NPM packages for the Lytix project.
 
 #### Environment Variables
 
-The following environment variables are required to run the Metric Mongrel client.
+The following environment variables are required to run the Lytix client.
 
-- `MM_API_KEY`: The API key for the Metric Mongrel API. This is required to send data to the Metric Mongrel API.
+- `MM_API_KEY`: The API key for the Lytix API. This is required to send data to the Lytix API.
 
 The followig environment variables are optional.
 
-- `MM_BASE_URL`: The base URL for the Metric Mongrel API. This is required to send data to the Metric Mongrel API.
+- `MM_BASE_URL`: The base URL for the Lytix API. This is required to send data to the Lytix API.
 
 #### Configuration
 
@@ -31,7 +31,7 @@ Then you can use the `ErrorRequestHandler` middleware.
 
 ```ts
 /**
- * Metric Mongrel middleware
+ * Lytix middleware
  */
 app.use(ErrorRequestHandler);
 ```
@@ -39,12 +39,12 @@ app.use(ErrorRequestHandler);
 _But wait, there's more._ You can define a logger, that can be passed to our middleware that can be used to trace a users request.
 
 ```ts
-import { MMLogger, ErrorRequestHandler } from "@metric-mongrel/client";
+import { MMLogger, ErrorRequestHandler } from "@lytix/client";
 
 export const logger = new MMLogger("main");
 
 /**
- * Your custom auth middleware unrelated to metric mongrel
+ * Your custom auth middleware unrelated to lytix
  */
 app.use(async (req, res, next) => {
   logger.info(`New request for path: ${req.path} with method: ${req.method}`);
@@ -69,7 +69,7 @@ app.get(
 );
 
 /**
- * Metric Mongrel middleware
+ * Lytix middleware
  */
 app.use(ErrorRequestHandler);
 ```

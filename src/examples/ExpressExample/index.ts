@@ -41,7 +41,7 @@ app.get("/test", async (req, res) => {
 });
 
 /**
- * Metric Mongrel middleware
+ * Lytix middleware
  */
 app.use(
   (

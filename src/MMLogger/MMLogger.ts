@@ -6,7 +6,7 @@ import MMLoggerStreamWrapper from "./MMLoggerStreamWrapper";
 export const MM_LOGGER_HTTP_CONTEXT_KEY = "MLOGKEY";
 
 /**
- * Main Metric Mongrel Logger.
+ * Main Lytix Logger.
  * This is a special logger since you can specify metadata. Depending if you are
  * running in a http context, the metadata will be saved as follows:
  * - Running with a HTTP context (e.g. express server): Metadata is saved in the http context, and is unique per request

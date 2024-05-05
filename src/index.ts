@@ -1,5 +1,5 @@
 /**
- * Main file with all exports from the Metric Mongrel NPM packages
+ * Main file with all exports from the Lytix NPM packages
  */
 
 import { ErrorRequestHandler } from "./ErrorRequestHandler/ErrorRequestHandler";
