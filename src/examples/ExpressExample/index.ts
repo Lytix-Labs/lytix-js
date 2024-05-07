@@ -1,9 +1,7 @@
 import express from "express";
 import { LLogger } from "../../LLogger/LLogger";
 import httpContext from "express-http-context";
-import metricCollector from "../../MetricCollector";
 import { AnalyticRequestHandler } from "../../AnalyticRequestHandler/AnalyticRequestHandler";
-import { ErrorRequestHandler } from "../../ErrorRequestHandler/ErrorRequestHandler";
 
 const mmLogger = new LLogger("ExpressExample");
 
@@ -40,19 +38,6 @@ app.get("/test", async (req, res) => {
   res.send("Hello World");
 });
 
-/**
- * Lytix middleware
- */
-app.use(
-  (
-    err: any,
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
-    ErrorRequestHandler(err, req, res, next, mmLogger);
-  }
-);
 app
   .listen(8080, () => {
     mmLogger.info(`Server running at PORT: ${8080}`);
