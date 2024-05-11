@@ -99,4 +99,42 @@ export class MetricCollector {
       ...(metricMetadata ? metricMetadata : {}),
     });
   }
+
+  /**
+   * Captures a model io event
+   */
+  public async captureModelTrace<T extends string>(
+    modelName: string,
+    userInput: string,
+    callback: () => Promise<T>,
+    metricMetadata?: { [key: string]: number | boolean | string }
+  ) {
+    const startTime = new Date();
+    const modelOutput = await callback();
+    try {
+      /**
+       * Capture modelIO event along with the response time
+       */
+      await Promise.all([
+        this.captureModelIO(modelName, userInput, modelOutput, metricMetadata),
+        this.increment(
+          `model.responseTime`,
+          new Date().getTime() - startTime.getTime(),
+          {
+            modelName,
+          }
+        ),
+      ]);
+    } catch (err) {
+      this.logger.error(
+        `Failed to capture model trace: ${err}`,
+        err,
+        modelName,
+        userInput,
+        modelOutput
+      );
+    } finally {
+      return modelOutput;
+    }
+  }
 }
