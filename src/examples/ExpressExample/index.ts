@@ -1,9 +1,8 @@
 import express from "express";
-import { LLogger } from "../../LLogger/LLogger";
-import httpContext from "express-http-context";
 import { AnalyticRequestHandler } from "../../AnalyticRequestHandler/AnalyticRequestHandler";
+import { LLogger } from "../../LLogger/LLogger";
 
-const mmLogger = new LLogger("ExpressExample");
+const mmLogger = new LLogger("ExpressExample", { httpContext: true });
 
 const app = express();
 
@@ -14,10 +13,13 @@ app.use((req, res, next) => {
   return AnalyticRequestHandler(req, res, next, mmLogger);
 });
 
-/**
- * HTTP Context middlware
- */
-app.use(httpContext.middleware);
+app.use((req, res, next) => {
+  /**
+   * Lets say we auth the user and get their UID
+   */
+  mmLogger.setMetadata({ key: "userId", value: "123" });
+  next();
+});
 
 app.get("/test", async (req, res) => {
   /**

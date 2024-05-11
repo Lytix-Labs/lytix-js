@@ -1,8 +1,15 @@
 import stream from "stream";
-import httpContext from "express-http-context";
-import { LYTIX_LOGGER_HTTP_CONTEXT_KEY } from "./LLogger";
+// import httpContext from "express-http-context";
+import { AsyncLocalStorage } from "node:async_hooks";
+import type { LoggerHTTPContext } from "./LLogger.types";
 
 class LLoggerStreamWrapper extends stream.Writable {
+  private context: AsyncLocalStorage<LoggerHTTPContext>;
+  constructor(context: AsyncLocalStorage<LoggerHTTPContext>) {
+    super();
+    this.context = context;
+  }
+
   /**
    * When we have a record from bunyan
    */
@@ -10,10 +17,7 @@ class LLoggerStreamWrapper extends stream.Writable {
     /**
      * Save this stream to our http context if present
      */
-    const existingContext: string[] =
-      httpContext.get(LYTIX_LOGGER_HTTP_CONTEXT_KEY) ?? [];
-    existingContext.push(JSON.stringify(record));
-    httpContext.set(LYTIX_LOGGER_HTTP_CONTEXT_KEY, existingContext);
+    this.context.getStore()?.logs.push(record);
     return true;
   }
 }

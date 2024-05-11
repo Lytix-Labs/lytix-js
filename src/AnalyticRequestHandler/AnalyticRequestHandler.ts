@@ -13,6 +13,13 @@ export function AnalyticRequestHandler(
   mmLogger?: LLogger
 ) {
   const startTime = new Date();
+
+  /**
+   * Define our logger if not given
+   */
+  const loggerPulled =
+    mmLogger ?? new LLogger("lytix-request-handler", { httpContext: true });
+
   /**
    * Use close instead of finished, that way all compute is done
    * @see https://nodejs.org/api/stream.html#class-streamwritable
@@ -39,9 +46,10 @@ export function AnalyticRequestHandler(
         ...(userAgent ? { userAgent } : {}),
       },
       ...(mmLogger !== undefined && (statusCode < 200 || statusCode > 200)
-        ? { logs: mmLogger.getMetadataFromHttpContext() }
+        ? { logs: mmLogger.getLogs() }
         : {}),
     });
   });
-  next();
+
+  loggerPulled.runInHttpContext(() => next());
 }

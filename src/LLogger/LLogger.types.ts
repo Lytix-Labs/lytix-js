@@ -6,3 +6,8 @@
 export interface LLoggerMetadata {
   [key: string]: string | boolean | number;
 }
+
+export interface LoggerHTTPContext {
+  metadata: LLoggerMetadata;
+  logs: string[];
+}

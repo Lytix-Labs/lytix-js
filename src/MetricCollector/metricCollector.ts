@@ -26,7 +26,8 @@ export class MetricCollector {
         | string
         | boolean
         | number
-        | { [key: string]: string | boolean | number };
+        | { [key: string]: string | boolean | number }
+        | string[];
     }
   ) {
     const url = `${this.baseURL}${endpoint}`;
@@ -69,7 +70,7 @@ export class MetricCollector {
   public async _captureMetricTrace(args: {
     metricName: string;
     metricValue: number;
-    logs?: string;
+    logs?: string[];
     metricMetadata?: { [key: string]: number | boolean | string };
   }) {
     const { metricName, metricValue, logs, metricMetadata } = args;

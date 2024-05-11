@@ -1,6 +1,6 @@
 import bunyan from "bunyan";
-import { LLoggerMetadata } from "./LLogger.types";
-import httpContext from "express-http-context";
+import { AsyncLocalStorage } from "node:async_hooks";
+import type { LLoggerMetadata, LoggerHTTPContext } from "./LLogger.types";
 import LLoggerStreamWrapper from "./LLoggerStreamWrapper";
 
 export const LYTIX_LOGGER_HTTP_CONTEXT_KEY = "LXLOGKEY";
@@ -19,8 +19,20 @@ export class LLogger {
    * Whether to log to the console or via bunyan
    */
   private console: boolean;
+  /**
+   * Are we running this logger as part of HTTP context
+   */
+  private httpContext: boolean;
+  /**
+   * AsyncLocalStorage for storing metadata across async calls
+   */
+  private asyncLocalStorage = new AsyncLocalStorage<LoggerHTTPContext>();
 
-  constructor(loggerName: string, config?: { console?: boolean }) {
+  constructor(
+    loggerName: string,
+    config?: { console?: boolean; httpContext?: boolean }
+  ) {
+    this.httpContext = config?.httpContext ?? false;
     if (config?.console === true) {
       this.logger = bunyan.createLogger({ name: loggerName });
     } else {
@@ -28,7 +40,7 @@ export class LLogger {
         { type: "stream", stream: process.stdout, level: "trace" as const },
         {
           type: "stream",
-          stream: new LLoggerStreamWrapper(),
+          stream: new LLoggerStreamWrapper(this.asyncLocalStorage),
           /**
            * We only want info and above to push to our server
            * @todo
@@ -43,29 +55,46 @@ export class LLogger {
   }
 
   /**
-   * Gets the metadata from the http context
+   * Set httpContext boolean
    */
-  getMetadataFromHttpContext(): string | undefined {
-    return httpContext.get(LYTIX_LOGGER_HTTP_CONTEXT_KEY);
+  getHttpContext(): boolean {
+    return this.httpContext;
   }
 
+  /**
+   * Run callback in http context
+   */
+  runInHttpContext(callback: () => void): void {
+    this.asyncLocalStorage.run({ logs: [], metadata: {} }, callback);
+  }
+
+  // /**
+  //  * Gets the metadata from the http context
+  //  */
+  // getMetadataFromHttpContext(): string | undefined {
+  //   const toReturn = this.asyncLocalStorage.getStore();
+  //   if (!toReturn) {
+  //     return "";
+  //   }
+  //   return JSON.stringify(toReturn.metadata);
+  // }
+
+  /**
+   * Set the metadata for the logger in the async store
+   * or in the class if we are not running in an HTTP context
+   */
   public setMetadata(metadata: LLoggerMetadata): void {
     /**
      * Use the express http context to set this metadata
      */
-    if (!httpContext.ns.active) {
-      this.logger.warn(
-        `No HTTP context detected. Metadata will be saved directly to the logger`
-      );
+    if (this.httpContext === false) {
       this.metadata = metadata;
     } else {
-      httpContext.set("metadata", metadata);
+      const toSet = this.asyncLocalStorage.getStore();
+      if (!toSet) return;
+      toSet.metadata = metadata;
     }
   }
-
-  /**
-   * Save the log to the
-   */
 
   /**
    * Log an info with the metadata
@@ -138,8 +167,10 @@ export class LLogger {
    */
   private getMetadataFromStorage(): LLoggerMetadata {
     let metadata = this.metadata ?? {};
-    if (httpContext.ns.active) {
-      metadata = httpContext.get("metadata");
+    if (this.httpContext === true) {
+      const toGet = this.asyncLocalStorage.getStore();
+      if (!toGet) return {};
+      metadata = toGet.metadata;
     }
     return metadata;
   }
@@ -149,5 +180,15 @@ export class LLogger {
    */
   getMetadata(): LLoggerMetadata {
     return this.getMetadataFromStorage();
+  }
+
+  /**
+   * Get logs from the http context
+   */
+  getLogs(): string[] {
+    if (this.httpContext === false) return [];
+    const storage = this.asyncLocalStorage.getStore();
+    if (!storage) return [];
+    return storage.logs;
   }
 }
