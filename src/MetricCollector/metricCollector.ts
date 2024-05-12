@@ -30,21 +30,25 @@ export class MetricCollector {
         | string[];
     }
   ) {
-    const url = `${this.baseURL}${endpoint}`;
-    const headers = {
-      "Content-Type": "application/json",
-      "lx-api-key": this.apiKey,
-    };
-    const res = await fetch(url, {
-      method: "POST",
-      headers,
-      body: JSON.stringify(body),
-      credentials: "include",
-    });
-    if (res.status !== 200) {
-      this.logger.warn(
-        `Failed to send MetricMongal: ${res.status} with url: ${url}: ${res.body}`
-      );
+    try {
+      const url = `${this.baseURL}${endpoint}`;
+      const headers = {
+        "Content-Type": "application/json",
+        "lx-api-key": this.apiKey,
+      };
+      const res = await fetch(url, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(body),
+        credentials: "include",
+      });
+      if (res.status !== 200) {
+        this.logger.warn(
+          `Failed to send MetricMongal: ${res.status} with url: ${url}: ${res.body}`
+        );
+      }
+    } catch (err) {
+      this.logger.error(`Failed to send MetricMongal: ${err}`, err);
     }
   }
 
