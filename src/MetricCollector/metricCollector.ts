@@ -101,7 +101,7 @@ export class MetricCollector {
   }
 
   /**
-   * Captures a model io event
+   * Captures a model io event while also capturing the time it takes to respond
    */
   public async captureModelTrace<T extends string>(
     modelName: string,

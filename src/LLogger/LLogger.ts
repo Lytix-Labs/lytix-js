@@ -26,7 +26,8 @@ export class LLogger {
   /**
    * AsyncLocalStorage for storing metadata across async calls
    */
-  private asyncLocalStorage = new AsyncLocalStorage<LoggerHTTPContext>();
+  private asyncLocalStorage: AsyncLocalStorage<LoggerHTTPContext> | undefined =
+    undefined;
 
   constructor(
     loggerName: string,
@@ -35,7 +36,8 @@ export class LLogger {
     this.httpContext = config?.httpContext ?? false;
     if (config?.console === true) {
       this.logger = bunyan.createLogger({ name: loggerName });
-    } else {
+    } else if (config?.httpContext) {
+      this.asyncLocalStorage = new AsyncLocalStorage<LoggerHTTPContext>();
       const streams = [
         { type: "stream", stream: process.stdout, level: "trace" as const },
         {
@@ -49,6 +51,8 @@ export class LLogger {
         },
       ];
       this.logger = bunyan.createLogger({ name: loggerName, streams });
+    } else {
+      this.logger = bunyan.createLogger({ name: loggerName });
     }
 
     this.console = config?.console ?? false;
@@ -65,6 +69,10 @@ export class LLogger {
    * Run callback in http context
    */
   runInHttpContext(callback: () => void): void {
+    if (!this.asyncLocalStorage) {
+      this.logger.warn(`Tried to run in http context but httpContext is false`);
+      return callback();
+    }
     this.asyncLocalStorage.run({ logs: [], metadata: {} }, callback);
   }
 
@@ -87,7 +95,7 @@ export class LLogger {
     /**
      * Use the express http context to set this metadata
      */
-    if (this.httpContext === false) {
+    if (this.httpContext === false || !this.asyncLocalStorage) {
       this.metadata = metadata;
     } else {
       const toSet = this.asyncLocalStorage.getStore();
@@ -167,7 +175,7 @@ export class LLogger {
    */
   private getMetadataFromStorage(): LLoggerMetadata {
     let metadata = this.metadata ?? {};
-    if (this.httpContext === true) {
+    if (this.httpContext === true && this.asyncLocalStorage) {
       const toGet = this.asyncLocalStorage.getStore();
       if (!toGet) return {};
       metadata = toGet.metadata;
@@ -186,7 +194,7 @@ export class LLogger {
    * Get logs from the http context
    */
   getLogs(): string[] {
-    if (this.httpContext === false) return [];
+    if (this.httpContext === false || !this.asyncLocalStorage) return [];
     const storage = this.asyncLocalStorage.getStore();
     if (!storage) return [];
     return storage.logs;

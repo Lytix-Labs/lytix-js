@@ -1,5 +1,6 @@
 import express from "express";
 import { AnalyticRequestHandler } from "../../AnalyticRequestHandler/AnalyticRequestHandler";
+import LError from "../../LError/LError";
 import { LLogger } from "../../LLogger/LLogger";
 
 const mmLogger = new LLogger("ExpressExample", { httpContext: true });
@@ -27,11 +28,11 @@ app.get("/test", async (req, res) => {
    */
   try {
     mmLogger.info("Some process is starting");
-    throw new Error("An unexpeted error");
+    throw new LError("An unexpeted error", { env: "prod" });
   } catch (err) {
     mmLogger.error("crazy unexpeted error with this user: 123", err);
-    res.sendStatus(500);
-    return;
+    // res.sendStatus(500);
+    // return;
   }
 
   /**
