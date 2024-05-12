@@ -1,4 +1,4 @@
-export const LX_BASE_URL = process.env.LX_API_URL ?? "https://api.lytix.co";
+export const LX_BASE_URL = process.env.LX_BASE_URL ?? "https://api.lytix.co";
 export const LX_API_KEY = process.env.LX_API_KEY ?? "";
 
 function validate(): void {
