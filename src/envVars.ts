@@ -9,7 +9,9 @@ class LytixEnvVars {
 
   validate(): void {
     if (!this.LX_API_KEY) {
-      console.error(`Lytix ERROR: Missing: LX_API_KEY`);
+      console.error(
+        `Lytix ERROR: Missing: LX_API_KEY. Please make sure to set it via LytixCreds.setAPIKey() before making any calls`
+      );
     }
 
     if (!this.LX_BASE_URL) {
