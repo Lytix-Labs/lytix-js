@@ -6,5 +6,6 @@ import { AnalyticRequestHandler } from "./AnalyticRequestHandler/AnalyticRequest
 import LError from "./LError/LError";
 import { LLogger } from "./LLogger/LLogger";
 import MetricCollector from "./MetricCollector/index";
+import LytixCreds from "./envVars";
 
-export { AnalyticRequestHandler, LError, LLogger, MetricCollector };
+export { AnalyticRequestHandler, LError, LLogger, LytixCreds, MetricCollector };

@@ -1,17 +1,15 @@
 import { LLogger } from "../LLogger/LLogger";
-import { LX_API_KEY, LX_BASE_URL } from "../envVars";
+import LytixCreds from "../envVars";
 
 /**
  * Main class to collect and report metrics
  * back to HQ
  */
 export class MetricCollector {
-  private apiKey: string;
   private baseURL: string;
   private logger: LLogger;
   constructor() {
-    this.apiKey = LX_API_KEY;
-    this.baseURL = new URL("v1/metrics", LX_BASE_URL).href;
+    this.baseURL = new URL("v1/metrics", LytixCreds.LX_BASE_URL).href;
     this.logger = new LLogger("mm-metrics-collector", { console: true });
   }
 
@@ -34,7 +32,7 @@ export class MetricCollector {
       const url = `${this.baseURL}${endpoint}`;
       const headers = {
         "Content-Type": "application/json",
-        "lx-api-key": this.apiKey,
+        "lx-api-key": LytixCreds.LX_API_KEY,
       };
       const res = await fetch(url, {
         method: "POST",
