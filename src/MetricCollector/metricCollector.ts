@@ -98,7 +98,7 @@ export class MetricCollector {
       modelName,
       userInput,
       modelOutput,
-      ...(metricMetadata ? metricMetadata : {}),
+      ...(metricMetadata ? { metricMetadata } : {}),
     });
   }
 
