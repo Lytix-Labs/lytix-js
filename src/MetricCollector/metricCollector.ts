@@ -42,11 +42,11 @@ export class MetricCollector {
       });
       if (res.status !== 200) {
         this.logger.warn(
-          `Failed to send MetricMongal: ${res.status} with url: ${url}: ${res.body}`
+          `Failed to send to Lytix: ${res.status} with url: ${url}: ${res.body}`
         );
       }
     } catch (err) {
-      this.logger.error(`Failed to send MetricMongal: ${err}`, err);
+      this.logger.error(`Failed to send to Lytix: ${err}`, err);
     }
   }
 
@@ -124,6 +124,7 @@ export class MetricCollector {
           new Date().getTime() - startTime.getTime(),
           {
             modelName,
+            ...metricMetadata,
           }
         ),
       ]);
