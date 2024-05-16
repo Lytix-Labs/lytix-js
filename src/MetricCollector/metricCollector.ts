@@ -90,7 +90,7 @@ export class MetricCollector {
    */
   public async captureModelIO(args: {
     modelName: string;
-    userInput: string;
+    modelInput: string;
     modelOutput: string;
     metricMetadata?: { [key: string]: number | boolean | string };
     userIdentifier?: string;
@@ -98,7 +98,7 @@ export class MetricCollector {
   }) {
     const {
       modelName,
-      userInput,
+      modelInput,
       modelOutput,
       metricMetadata,
       userIdentifier,
@@ -106,7 +106,7 @@ export class MetricCollector {
     } = args;
     await this.sendPostRequest("/modelIO", {
       modelName,
-      userInput,
+      modelInput,
       modelOutput,
       ...(metricMetadata ? { metricMetadata } : {}),
       ...(userIdentifier ? { userIdentifier } : {}),
@@ -119,7 +119,7 @@ export class MetricCollector {
    */
   public async captureModelTrace<T extends string>(args: {
     modelName: string;
-    userInput: string;
+    modelInput: string;
     callback: () => Promise<T>;
     metricMetadata?: { [key: string]: number | boolean | string };
     userIdentifier?: string;
@@ -127,7 +127,7 @@ export class MetricCollector {
   }) {
     const {
       modelName,
-      userInput,
+      modelInput,
       callback,
       metricMetadata,
       userIdentifier,
@@ -142,7 +142,7 @@ export class MetricCollector {
       await Promise.all([
         this.captureModelIO({
           modelName,
-          userInput,
+          modelInput,
           modelOutput,
           metricMetadata,
           userIdentifier,
@@ -162,7 +162,7 @@ export class MetricCollector {
         `Failed to capture model trace: ${err}`,
         err,
         modelName,
-        userInput,
+        modelInput,
         modelOutput
       );
     } finally {
