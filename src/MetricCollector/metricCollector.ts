@@ -88,29 +88,51 @@ export class MetricCollector {
   /**
    * Capture a model input/output
    */
-  public async captureModelIO(
-    modelName: string,
-    userInput: string,
-    modelOutput: string,
-    metricMetadata?: { [key: string]: number | boolean | string }
-  ) {
+  public async captureModelIO(args: {
+    modelName: string;
+    userInput: string;
+    modelOutput: string;
+    metricMetadata?: { [key: string]: number | boolean | string };
+    userIdentifier?: string;
+    sessionId?: string;
+  }) {
+    const {
+      modelName,
+      userInput,
+      modelOutput,
+      metricMetadata,
+      userIdentifier,
+      sessionId,
+    } = args;
     await this.sendPostRequest("/modelIO", {
       modelName,
       userInput,
       modelOutput,
       ...(metricMetadata ? { metricMetadata } : {}),
+      ...(userIdentifier ? { userIdentifier } : {}),
+      ...(sessionId ? { sessionId } : {}),
     });
   }
 
   /**
    * Captures a model io event while also capturing the time it takes to respond
    */
-  public async captureModelTrace<T extends string>(
-    modelName: string,
-    userInput: string,
-    callback: () => Promise<T>,
-    metricMetadata?: { [key: string]: number | boolean | string }
-  ) {
+  public async captureModelTrace<T extends string>(args: {
+    modelName: string;
+    userInput: string;
+    callback: () => Promise<T>;
+    metricMetadata?: { [key: string]: number | boolean | string };
+    userIdentifier?: string;
+    sessionId?: string;
+  }) {
+    const {
+      modelName,
+      userInput,
+      callback,
+      metricMetadata,
+      userIdentifier,
+      sessionId,
+    } = args;
     const startTime = new Date();
     const modelOutput = await callback();
     try {
@@ -118,7 +140,14 @@ export class MetricCollector {
        * Capture modelIO event along with the response time
        */
       await Promise.all([
-        this.captureModelIO(modelName, userInput, modelOutput, metricMetadata),
+        this.captureModelIO({
+          modelName,
+          userInput,
+          modelOutput,
+          metricMetadata,
+          userIdentifier,
+          sessionId,
+        }),
         this.increment(
           `model.responseTime`,
           new Date().getTime() - startTime.getTime(),
