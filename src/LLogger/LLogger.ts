@@ -1,5 +1,6 @@
 import bunyan from "bunyan";
 import { AsyncLocalStorage } from "node:async_hooks";
+import metricCollector from "../MetricCollector";
 import type { LLoggerMetadata, LoggerHTTPContext } from "./LLogger.types";
 import LLoggerStreamWrapper from "./LLoggerStreamWrapper";
 
@@ -14,15 +15,16 @@ export const LYTIX_LOGGER_HTTP_CONTEXT_KEY = "LXLOGKEY";
  */
 export class LLogger {
   private logger: bunyan;
+  private loggerName: string;
   private metadata?: LLoggerMetadata;
   /**
    * Whether to log to the console or via bunyan
    */
   private console: boolean;
   /**
-   * Are we running this logger as part of HTTP context
+   * Are we running this logger as part of async/HTTP context
    */
-  private httpContext: boolean;
+  private asyncContext: boolean;
   /**
    * AsyncLocalStorage for storing metadata across async calls
    */
@@ -31,12 +33,17 @@ export class LLogger {
 
   constructor(
     loggerName: string,
-    config?: { console?: boolean; httpContext?: boolean }
+    metadata?: LLoggerMetadata,
+    config?: {
+      console?: boolean;
+      asyncContext?: boolean;
+    }
   ) {
-    this.httpContext = config?.httpContext ?? false;
+    this.loggerName = loggerName;
+    this.asyncContext = config?.asyncContext ?? true;
     if (config?.console === true) {
       this.logger = bunyan.createLogger({ name: loggerName });
-    } else if (config?.httpContext) {
+    } else if (this.asyncContext) {
       this.asyncLocalStorage = new AsyncLocalStorage<LoggerHTTPContext>();
       const streams = [
         { type: "stream", stream: process.stdout, level: "trace" as const },
@@ -56,24 +63,83 @@ export class LLogger {
     }
 
     this.console = config?.console ?? false;
+
+    if (metadata) {
+      this.setMetadata(metadata);
+    }
   }
 
   /**
    * Set httpContext boolean
    */
   getHttpContext(): boolean {
-    return this.httpContext;
+    return this.asyncContext;
   }
 
   /**
-   * Run callback in http context
+   * Run callback in http context (e.g. sync context)
    */
-  runInHttpContext(callback: () => void): void {
+  runInHTTPContext(callback: () => void): void {
     if (!this.asyncLocalStorage) {
       this.logger.warn(`Tried to run in http context but httpContext is false`);
       return callback();
     }
     this.asyncLocalStorage.run({ logs: [], metadata: {} }, callback);
+  }
+
+  /**
+   * Run callback in LLogger async context (e.g. logs will
+   * be saved across functions)
+   */
+  runInAsyncContext(callback: () => Promise<void>): Promise<void> {
+    if (!this.asyncLocalStorage) {
+      this.logger.warn(`Tried to run in http context but httpContext is false`);
+      return callback();
+    }
+    const callbackWithCatch = () => {
+      /**
+       * Re-set the metadata in the async store
+       */
+      if (this.metadata) {
+        this.setMetadata(this.metadata);
+      }
+
+      return Promise.resolve(callback()).catch(async (e) => {
+        try {
+          /**
+           * Log the error so the user will be able to see it in the console
+           */
+          this.logger.error(`Error in async context`, e);
+
+          /**
+           * Send the logs + the metadata to Lytix
+           */
+          await metricCollector._captureMetricTrace({
+            metricName: "LLoggerError",
+            metricValue: 1,
+            metricMetadata: {
+              ...this.getMetadataFromStorage(),
+              loggerName: this.loggerName,
+            },
+            logs: this.getLogs(),
+          });
+        } catch (e) {
+          /**
+           * Never let this break anything
+           */
+        } finally {
+          /**
+           * Then just raise the error as normal
+           */
+          throw e;
+        }
+      });
+    };
+
+    return this.asyncLocalStorage.run(
+      { logs: [], metadata: {} },
+      callbackWithCatch
+    );
   }
 
   // /**
@@ -95,11 +161,14 @@ export class LLogger {
     /**
      * Use the express http context to set this metadata
      */
-    if (this.httpContext === false || !this.asyncLocalStorage) {
+    if (this.asyncContext === false || !this.asyncLocalStorage) {
       this.metadata = metadata;
     } else {
+      this.metadata = metadata;
       const toSet = this.asyncLocalStorage.getStore();
-      if (!toSet) return;
+      if (!toSet) {
+        return;
+      }
       toSet.metadata = metadata;
     }
   }
@@ -175,7 +244,7 @@ export class LLogger {
    */
   private getMetadataFromStorage(): LLoggerMetadata {
     let metadata = this.metadata ?? {};
-    if (this.httpContext === true && this.asyncLocalStorage) {
+    if (this.asyncContext === true && this.asyncLocalStorage) {
       const toGet = this.asyncLocalStorage.getStore();
       if (!toGet) return {};
       metadata = toGet.metadata;
@@ -194,7 +263,7 @@ export class LLogger {
    * Get logs from the http context
    */
   getLogs(): string[] {
-    if (this.httpContext === false || !this.asyncLocalStorage) return [];
+    if (this.asyncContext === false || !this.asyncLocalStorage) return [];
     const storage = this.asyncLocalStorage.getStore();
     if (!storage) return [];
     return storage.logs;

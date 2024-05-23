@@ -3,7 +3,7 @@ import { AnalyticRequestHandler } from "../../AnalyticRequestHandler/AnalyticReq
 import LError from "../../LError/LError";
 import { LLogger } from "../../LLogger/LLogger";
 
-const mmLogger = new LLogger("ExpressExample", { httpContext: true });
+const mmLogger = new LLogger("ExpressExample", { asyncContext: true });
 
 const app = express();
 

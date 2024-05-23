@@ -1,4 +1,4 @@
-import { LLogger } from "../LLogger/LLogger";
+import bunyan from "bunyan";
 import LytixCreds from "../envVars";
 
 /**
@@ -7,10 +7,14 @@ import LytixCreds from "../envVars";
  */
 export class MetricCollector {
   private baseURL: string;
-  private logger: LLogger;
+  private logger: bunyan;
   constructor() {
     this.baseURL = new URL("v1/metrics", LytixCreds.LX_BASE_URL).href;
-    this.logger = new LLogger("mm-metrics-collector", { console: true });
+    /**
+     * We can't use LLogger here since it'll be a circular dep, so just use the
+     * base bunyan logger
+     */
+    this.logger = bunyan.createLogger({ name: "mm-metrics-collector" });
   }
 
   /**
@@ -120,7 +124,7 @@ export class MetricCollector {
   public async captureModelTrace<T extends string>(args: {
     modelName: string;
     modelInput: string;
-    callback: () => Promise<T>;
+    generateModelOutput: () => Promise<T>;
     metricMetadata?: { [key: string]: number | boolean | string };
     userIdentifier?: string;
     sessionId?: string;
@@ -128,13 +132,13 @@ export class MetricCollector {
     const {
       modelName,
       modelInput,
-      callback,
+      generateModelOutput,
       metricMetadata,
       userIdentifier,
       sessionId,
     } = args;
     const startTime = new Date();
-    const modelOutput = await callback();
+    const modelOutput = await generateModelOutput();
     try {
       /**
        * Capture modelIO event along with the response time

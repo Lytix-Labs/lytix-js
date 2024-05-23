@@ -17,8 +17,7 @@ export function AnalyticRequestHandler(
   /**
    * Define our logger if not given
    */
-  const loggerPulled =
-    mmLogger ?? new LLogger("lytix-request-handler", { httpContext: true });
+  const loggerPulled = mmLogger ?? new LLogger("lytix-request-handler");
 
   /**
    * Use close instead of finished, that way all compute is done
@@ -51,5 +50,5 @@ export function AnalyticRequestHandler(
     });
   });
 
-  loggerPulled.runInHttpContext(() => next());
+  loggerPulled.runInHTTPContext(() => next());
 }
