@@ -20,7 +20,7 @@ const LErrorIncrement = (
         hostname: "",
         pid: -1,
         level: 50,
-        msg,
+        msg: errorMsg,
         time: new Date().toISOString(),
       })
     );
