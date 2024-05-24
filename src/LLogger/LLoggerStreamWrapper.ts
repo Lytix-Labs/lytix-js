@@ -1,11 +1,11 @@
 import stream from "stream";
 // import httpContext from "express-http-context";
 import { AsyncLocalStorage } from "node:async_hooks";
-import type { LoggerHTTPContext } from "./LLogger.types";
+import type { LoggerAsyncContext } from "./LLogger.types";
 
 class LLoggerStreamWrapper extends stream.Writable {
-  private context: AsyncLocalStorage<LoggerHTTPContext>;
-  constructor(context: AsyncLocalStorage<LoggerHTTPContext>) {
+  private context: AsyncLocalStorage<LoggerAsyncContext>;
+  constructor(context: AsyncLocalStorage<LoggerAsyncContext>) {
     super();
     this.context = context;
   }

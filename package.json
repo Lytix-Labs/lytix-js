@@ -1,6 +1,6 @@
 {
   "name": "@lytix/client",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Official Lytix Client Packages",
   "main": "dist/index.js",
   "exports": {
@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc",
     "express-example": "npm run build && node ./dist/examples/ExpressExample/index.js",
-    "async-function-example": "npm run build && node ./dist/examples/AsyncFunctionExampe/index.js",
+    "async-function-example": "npm run build && node ./dist/examples/AsyncFunctionExample/index.js",
     "postinstall": "npm run build",
     "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"

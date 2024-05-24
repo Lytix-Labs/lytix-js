@@ -7,7 +7,7 @@ export interface LLoggerMetadata {
   [key: string]: string | boolean | number;
 }
 
-export interface LoggerHTTPContext {
-  metadata: LLoggerMetadata;
+export interface LoggerAsyncContext {
+  // metadata: LLoggerMetadata;
   logs: string[];
 }

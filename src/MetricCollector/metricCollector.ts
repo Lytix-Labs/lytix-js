@@ -8,6 +8,7 @@ import LytixCreds from "../envVars";
 export class MetricCollector {
   private baseURL: string;
   private logger: bunyan;
+  public processingMetricMutex: number = 0;
   constructor() {
     this.baseURL = new URL("v1/metrics", LytixCreds.LX_BASE_URL).href;
     /**
@@ -79,6 +80,7 @@ export class MetricCollector {
     logs?: string[];
     metricMetadata?: { [key: string]: number | boolean | string };
   }) {
+    this.processingMetricMutex++;
     const { metricName, metricValue, logs, metricMetadata } = args;
 
     await this.sendPostRequest("/increment", {
@@ -87,6 +89,7 @@ export class MetricCollector {
       metricMetadata: metricMetadata === undefined ? {} : metricMetadata,
       ...(logs === undefined ? {} : { logs }),
     });
+    this.processingMetricMutex--;
   }
 
   /**
