@@ -1,6 +1,6 @@
 {
   "name": "@lytix/client",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Official Lytix Client Packages",
   "main": "dist/index.js",
   "exports": {

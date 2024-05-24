@@ -1,17 +1,18 @@
 import express from "express";
-import { AnalyticRequestHandler } from "../../AnalyticRequestHandler/AnalyticRequestHandler";
 import LError from "../../LError/LError";
 import { LLogger } from "../../LLogger/LLogger";
+import { LytixRequestWrapper } from "../../LytixRequestWrapper/LytixRequestWrapper";
 
-const mmLogger = new LLogger("ExpressExample", { asyncContext: true });
+const mmLogger = new LLogger("ExpressExample");
 
 const app = express();
 
 /**
  * This handle is used to push basic HTTP metrics
+ * @note The last arg is used to capture the request data
  */
 app.use((req, res, next) => {
-  return AnalyticRequestHandler(req, res, next, mmLogger);
+  return LytixRequestWrapper(req, res, next, true);
 });
 
 app.use((req, res, next) => {
