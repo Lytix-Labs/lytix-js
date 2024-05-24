@@ -3,7 +3,7 @@ import LAsyncStore from "../LAsyncStore/LAsyncStore";
 import metricCollector from "../MetricCollector";
 
 class LError extends Error {
-  constructor(msg: string, errorMetadata?: { [key: string]: string }) {
+  constructor(msg: string, errorMetadata?: { [key: string]: string | number }) {
     try {
       /**
        * Attempt to pull any data from the async storage if available
