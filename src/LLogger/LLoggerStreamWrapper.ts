@@ -23,7 +23,9 @@ class LLoggerStreamWrapper extends stream.Writable {
      * Always only store the last 20 logs in the async context so we
      * dont OOM
      */
-    this.context.getStore()?.logs.slice(0, 20);
+    this.context.enterWith({
+      logs: this.context.getStore()?.logs.slice(0, 20) ?? [],
+    });
     return true;
   }
 }
