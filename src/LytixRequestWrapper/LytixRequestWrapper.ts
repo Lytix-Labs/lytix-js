@@ -12,8 +12,6 @@ export function LytixRequestWrapper(
   next: NextFunction,
   captureRequestData: boolean = false
 ) {
-  const startTime = new Date();
-
   /**
    * Define our logger if not given
    */
@@ -39,14 +37,13 @@ export function LytixRequestWrapper(
       const { path, method, hostname } = req;
       const referer = req.headers["referer"];
       const userAgent = req.headers["user-agent"];
-      const requestDuration = new Date().getTime() - startTime.getTime();
 
       /**
        * Report this back to HQ
        */
       await metricCollector._captureMetricTrace({
         metricName: "LError",
-        metricValue: requestDuration,
+        metricValue: 1,
         metricMetadata: {
           "$no-index:errorMessage": "Non-200 HTTP Request",
           path,
