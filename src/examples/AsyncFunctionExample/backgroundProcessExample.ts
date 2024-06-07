@@ -8,7 +8,7 @@ const backgroundProcess = async () => {
   logger.info("Background process started for user!");
   await new Promise((resolve) => setTimeout(resolve, 1000));
   logger.warn("We can warn to let folks know we see an error coming up!");
-  throw new LError("Unique Error 54", { userId: "123" });
+  throw new LError("exampleError", { userId: "123" });
   logger.info("Background process ended");
 };
 

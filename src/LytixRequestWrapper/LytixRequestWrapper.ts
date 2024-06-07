@@ -25,19 +25,30 @@ export function LytixRequestWrapper(
      * @see https://nodejs.org/api/stream.html#class-streamwritable
      */
     res.once("close", async () => {
+      const statusCode = res.statusCode;
+      if (statusCode >= 200 && statusCode <= 299) {
+        /**
+         * Nothing to log if it was a good request
+         */
+        return;
+      }
+
+      /**
+       * Otherwise, lets parse and report back to HQ
+       */
       const { path, method, hostname } = req;
       const referer = req.headers["referer"];
       const userAgent = req.headers["user-agent"];
       const requestDuration = new Date().getTime() - startTime.getTime();
-      const statusCode = res.statusCode;
 
       /**
        * Report this back to HQ
        */
       await metricCollector._captureMetricTrace({
-        metricName: "requestDuration",
+        metricName: "LError",
         metricValue: requestDuration,
         metricMetadata: {
+          "$no-index:errorMessage": "Non-200 HTTP Request",
           path,
           method,
           statusCode,
