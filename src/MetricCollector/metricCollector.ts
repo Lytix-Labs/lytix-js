@@ -10,7 +10,7 @@ export class MetricCollector {
   private logger: bunyan;
   public processingMetricMutex: number = 0;
   constructor() {
-    this.baseURL = new URL("v1/metrics", LytixCreds.LX_BASE_URL).href;
+    this.baseURL = new URL("v2/metrics", LytixCreds.LX_BASE_URL).href;
     /**
      * We can't use LLogger here since it'll be a circular dep, so just use the
      * base bunyan logger
@@ -30,7 +30,8 @@ export class MetricCollector {
         | boolean
         | number
         | { [key: string]: string | boolean | number }
-        | string[];
+        | string[]
+        | { role: string; content: string }[];
     }
   ) {
     try {
@@ -97,24 +98,32 @@ export class MetricCollector {
    */
   public async captureModelIO(args: {
     modelName: string;
-    modelInput: string;
-    modelOutput: string;
+    systemPrompt?: string;
+    userPrompt: string;
+    assistantMessage: string;
     metricMetadata?: { [key: string]: number | boolean | string };
     userIdentifier?: string;
     sessionId?: string;
   }) {
     const {
       modelName,
-      modelInput,
-      modelOutput,
+      systemPrompt,
+      userPrompt,
+      assistantMessage,
       metricMetadata,
       userIdentifier,
       sessionId,
     } = args;
+
+    const messages = [
+      ...(systemPrompt ? [{ role: "system", content: systemPrompt }] : []),
+      { role: "user", content: userPrompt },
+      { role: "assistant", content: assistantMessage },
+    ];
+
     await this.sendPostRequest("/modelIO", {
       modelName,
-      modelInput,
-      modelOutput,
+      messages,
       ...(metricMetadata ? { metricMetadata } : {}),
       ...(userIdentifier ? { userIdentifier } : {}),
       ...(sessionId ? { sessionId } : {}),
@@ -126,7 +135,8 @@ export class MetricCollector {
    */
   public async captureModelTrace<T extends string>(args: {
     modelName: string;
-    modelInput: string;
+    systemPrompt?: string;
+    userPrompt: string;
     generateModelOutput: () => Promise<T>;
     metricMetadata?: { [key: string]: number | boolean | string };
     userIdentifier?: string;
@@ -134,14 +144,15 @@ export class MetricCollector {
   }) {
     const {
       modelName,
-      modelInput,
+      systemPrompt,
+      userPrompt,
       generateModelOutput,
       metricMetadata,
       userIdentifier,
       sessionId,
     } = args;
     const startTime = new Date();
-    const modelOutput = await generateModelOutput();
+    const assistantMessage = await generateModelOutput();
     try {
       /**
        * Capture modelIO event along with the response time
@@ -149,8 +160,9 @@ export class MetricCollector {
       await Promise.all([
         this.captureModelIO({
           modelName,
-          modelInput,
-          modelOutput,
+          systemPrompt,
+          userPrompt,
+          assistantMessage,
           metricMetadata,
           userIdentifier,
           sessionId,
@@ -169,11 +181,12 @@ export class MetricCollector {
         `Failed to capture model trace: ${err}`,
         err,
         modelName,
-        modelInput,
-        modelOutput
+        systemPrompt,
+        userPrompt,
+        assistantMessage
       );
     } finally {
-      return modelOutput;
+      return assistantMessage;
     }
   }
 }
