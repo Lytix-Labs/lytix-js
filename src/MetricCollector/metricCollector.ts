@@ -104,6 +104,7 @@ export class MetricCollector {
     metricMetadata?: { [key: string]: number | boolean | string };
     userIdentifier?: string;
     sessionId?: string;
+    modelResponseTime?: number;
   }) {
     const {
       modelName,
@@ -113,6 +114,7 @@ export class MetricCollector {
       metricMetadata,
       userIdentifier,
       sessionId,
+      modelResponseTime,
     } = args;
 
     const messages = [
@@ -127,6 +129,7 @@ export class MetricCollector {
       ...(metricMetadata ? { metricMetadata } : {}),
       ...(userIdentifier ? { userIdentifier } : {}),
       ...(sessionId ? { sessionId } : {}),
+      ...(modelResponseTime ? { modelResponseTime } : {}),
     });
   }
 
@@ -166,15 +169,8 @@ export class MetricCollector {
           metricMetadata,
           userIdentifier,
           sessionId,
+          modelResponseTime: new Date().getTime() - startTime.getTime(),
         }),
-        this.increment(
-          `model.responseTime`,
-          new Date().getTime() - startTime.getTime(),
-          {
-            modelName,
-            ...metricMetadata,
-          }
-        ),
       ]);
     } catch (err) {
       this.logger.error(
