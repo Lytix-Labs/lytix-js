@@ -7,6 +7,13 @@ import LErrorIncrement from "./LError/LErrorIncrement";
 import { LLogger } from "./LLogger/LLogger";
 import { LytixRequestWrapper } from "./LytixRequestWrapper/LytixRequestWrapper";
 import MetricCollector from "./MetricCollector/index";
+import {
+  ModelImageMessageSource,
+  ModelMessage,
+  ModelMessageContentEntry,
+  ModelTypes,
+  SpeedPriority,
+} from "./Optimodel/Optimodel.types";
 import LytixCreds from "./envVars";
 
 export {
@@ -16,4 +23,9 @@ export {
   LLogger,
   LytixCreds,
   MetricCollector,
+  ModelImageMessageSource,
+  ModelMessage,
+  ModelMessageContentEntry,
+  ModelTypes,
+  SpeedPriority,
 };
