@@ -5,7 +5,6 @@
 import LError from "./LError/LError";
 import LErrorIncrement from "./LError/LErrorIncrement";
 import { LLogger } from "./LLogger/LLogger";
-import { LytixRequestWrapper } from "./LytixRequestWrapper/LytixRequestWrapper";
 import MetricCollector from "./MetricCollector/index";
 import {
   ModelImageMessageSource,
@@ -17,7 +16,6 @@ import {
 import LytixCreds from "./envVars";
 
 export {
-  LytixRequestWrapper as AnalyticRequestHandler,
   LError,
   LErrorIncrement,
   LLogger,
