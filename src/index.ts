@@ -13,6 +13,7 @@ import {
   ModelTypes,
   SpeedPriority,
 } from "./Optimodel/Optimodel.types";
+import { queryModel } from "./Optimodel/QueryModel";
 import LytixCreds from "./envVars";
 
 export {
@@ -26,4 +27,5 @@ export {
   ModelMessageContentEntry,
   ModelTypes,
   SpeedPriority,
+  queryModel,
 };
