@@ -1,6 +1,6 @@
 {
   "name": "@lytix/client",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "Official Lytix Client Packages",
   "main": "dist/index.js",
   "exports": {
@@ -13,7 +13,7 @@
     "increment-example": "npm run build && node ./dist/examples/IncrementExample/index.js",
     "optimodel-example": "npm run build && node ./dist/examples/OptimodelExample/index.js",
     "optimodel-example-image": "npm run build && cp ./src/examples/OptimodelExampleImage/image-test.png ./dist/examples/OptimodelExampleImage/image-test.png && node ./dist/examples/OptimodelExampleImage/index.js",
-    "postinstall": "npm run build",
+    "postinstall": "rm -rf src/examples && npm run build",
     "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
