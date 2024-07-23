@@ -30,7 +30,7 @@ const main = async () => {
           },
         ],
       },
-      { role: "assistant", content: "Always respond with a JSON object" },
+      { role: "system", content: "Always respond with a JSON object" },
     ],
     speedPriority: SpeedPriority.low,
     temperature: 0.5,

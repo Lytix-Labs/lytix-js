@@ -19,7 +19,7 @@ const main = async () => {
     model: ModelTypes.gpt_4o_mini,
     messages: [
       { role: "user", content: prompt },
-      { role: "assistant", content: "Always respond with a JSON object" },
+      { role: "system", content: "Always respond with a JSON object" },
     ],
     speedPriority: SpeedPriority.low,
     temperature: 0.5,
