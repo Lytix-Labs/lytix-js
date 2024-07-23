@@ -1,6 +1,6 @@
 {
   "name": "@lytix/client",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "description": "Official Lytix Client Packages",
   "main": "dist/index.js",
   "exports": {
@@ -8,8 +8,6 @@
   },
   "scripts": {
     "build": "tsc",
-    "express-example": "npm run build && node ./dist/examples/ExpressExample/index.js",
-    "async-function-example": "npm run build && node ./dist/examples/AsyncFunctionExample/index.js",
     "increment-example": "npm run build && node ./dist/examples/IncrementExample/index.js",
     "optimodel-example": "npm run build && node ./dist/examples/OptimodelExample/index.js",
     "optimodel-example-image": "npm run build && cp ./src/examples/OptimodelExampleImage/image-test.png ./dist/examples/OptimodelExampleImage/image-test.png && node ./dist/examples/OptimodelExampleImage/index.js",
@@ -19,10 +17,6 @@
   },
   "author": "Lytixs Labs",
   "license": "MIT",
-  "devDependencies": {
-    "@types/express": "^4.17.21",
-    "express": "^4.19.2"
-  },
   "dependencies": {
     "@types/bunyan": "^1.8.11",
     "axios": "^1.6.7",
