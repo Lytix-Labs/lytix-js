@@ -23,6 +23,14 @@ export enum ModelTypes {
   gpt_4o_mini = "gpt_4o_mini",
 }
 
+export enum Providers {
+  openai = "openai",
+  togetherai = "togetherai",
+  groq = "groq",
+  anthropic = "anthropic",
+  bedrock = "bedrock",
+}
+
 export interface ModelImageMessageSource {
   type: string;
   mediaType: string;

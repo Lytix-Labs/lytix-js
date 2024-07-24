@@ -1,5 +1,10 @@
 import LytixCreds from "../envVars";
-import { ModelMessage, ModelTypes, SpeedPriority } from "./Optimodel.types";
+import {
+  ModelMessage,
+  ModelTypes,
+  Providers,
+  SpeedPriority,
+} from "./Optimodel.types";
 
 export async function queryModel(args: {
   model: ModelTypes;
@@ -9,6 +14,8 @@ export async function queryModel(args: {
   fallbackModels?: ModelTypes[];
   maxGenLen?: number;
   temperature?: number;
+  jsonMode?: boolean;
+  provider?: Providers;
 }): Promise<any> {
   const {
     model,
@@ -18,6 +25,8 @@ export async function queryModel(args: {
     fallbackModels = [],
     maxGenLen,
     temperature,
+    jsonMode,
+    provider,
   } = args;
   try {
     const allModels = [model, ...fallbackModels];
@@ -37,6 +46,8 @@ export async function queryModel(args: {
               speedPriority: speedPriority,
               maxGenLen: maxGenLen,
               temperature: temperature,
+              jsonMode: jsonMode,
+              provider: provider,
             }),
             headers: { Authorization: `Bearer ${LytixCreds.LX_API_KEY}` },
           }
