@@ -11,6 +11,7 @@ import {
   ModelMessage,
   ModelMessageContentEntry,
   ModelTypes,
+  Providers,
   SpeedPriority,
 } from "./Optimodel/Optimodel.types";
 import { queryModel } from "./Optimodel/QueryModel";
@@ -26,6 +27,7 @@ export {
   ModelMessage,
   ModelMessageContentEntry,
   ModelTypes,
+  Providers,
   SpeedPriority,
   queryModel,
 };
