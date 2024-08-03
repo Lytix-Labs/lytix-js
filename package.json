@@ -1,10 +1,12 @@
 {
   "name": "@lytix/client",
-  "version": "4.1.4",
+  "version": "4.1.6",
   "description": "Official Lytix Client Packages",
   "main": "dist/index.js",
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.js",
+    "./Optimodel": "./dist/Optimodel/index.js",
+    "./envVars": "./dist/envVars.js"
   },
   "scripts": {
     "build": "tsc",
