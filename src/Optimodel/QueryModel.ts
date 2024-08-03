@@ -65,7 +65,7 @@ export async function queryModel(args: {
           }
         }
 
-        return jsonResponse["modelResponse"];
+        return jsonResponse;
       } catch (err) {
         // If we have any more models to try, try them first
         if (index < allModels.length - 1) {
