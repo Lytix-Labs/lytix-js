@@ -13,4 +13,5 @@ export {
   LLamaPromptGuardConfig,
   LytixRegexConfig,
   MicrosoftPresidioConfig,
+  QueryResponse,
 } from "./Optimodel.types";

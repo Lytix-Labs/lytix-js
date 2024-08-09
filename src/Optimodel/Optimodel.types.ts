@@ -79,3 +79,12 @@ export type Guards =
   | LLamaPromptGuardConfig
   | LytixRegexConfig
   | MicrosoftPresidioConfig;
+
+export interface QueryResponse {
+  /**
+   * Response from a query to the provider
+   */
+  modelOutput: string;
+  promptTokens: number;
+  generationTokens: number;
+}

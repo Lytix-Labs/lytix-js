@@ -4,6 +4,7 @@ import {
   ModelMessage,
   ModelTypes,
   Providers,
+  QueryResponse,
   SpeedPriority,
 } from "./Optimodel.types";
 
@@ -20,7 +21,7 @@ export async function queryModel(args: {
   userId?: string;
   sessionId?: string;
   guards?: Guards[];
-}): Promise<any> {
+}): Promise<QueryResponse> {
   const {
     model,
     messages,
