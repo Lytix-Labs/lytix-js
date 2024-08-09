@@ -89,6 +89,7 @@ export async function queryModel(args: {
         }
       }
     }
+    throw new Error("No models to try");
   } catch (e) {
     console.error("Error querying model:", e);
     throw e;
