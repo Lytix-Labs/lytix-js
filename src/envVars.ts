@@ -22,6 +22,10 @@ class LytixEnvVars {
   setAPIKey(apiKey: string): void {
     this.LX_API_KEY = apiKey;
   }
+
+  setBaseURL(baseURL: string): void {
+    this.LX_BASE_URL = baseURL;
+  }
 }
 
 /**

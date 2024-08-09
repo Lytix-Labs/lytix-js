@@ -1,5 +1,6 @@
 import LytixCreds from "../envVars";
 import {
+  Guards,
   ModelMessage,
   ModelTypes,
   Providers,
@@ -16,6 +17,9 @@ export async function queryModel(args: {
   temperature?: number;
   jsonMode?: boolean;
   provider?: Providers;
+  userId?: string;
+  sessionId?: string;
+  guards?: Guards[];
 }): Promise<any> {
   const {
     model,
@@ -27,6 +31,9 @@ export async function queryModel(args: {
     temperature,
     jsonMode,
     provider,
+    userId,
+    sessionId,
+    guards,
   } = args;
   try {
     const allModels = [model, ...fallbackModels];
@@ -48,8 +55,14 @@ export async function queryModel(args: {
               temperature: temperature,
               jsonMode: jsonMode,
               provider: provider,
+              userId: userId,
+              sessionId: sessionId,
+              guards: guards,
             }),
-            headers: { Authorization: `Bearer ${LytixCreds.LX_API_KEY}` },
+            headers: {
+              Authorization: `Bearer ${LytixCreds.LX_API_KEY}`,
+              "Content-Type": "application/json",
+            },
           }
         );
 
