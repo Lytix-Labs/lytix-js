@@ -81,10 +81,10 @@ export type Guards =
   | MicrosoftPresidioConfig;
 
 export interface QueryResponse {
-  /**
-   * Response from a query to the provider
-   */
-  modelOutput: string;
+  modelResponse: string;
   promptTokens: number;
   generationTokens: number;
+  cost: number;
+  provider: Providers;
+  guardErrors: string[];
 }
