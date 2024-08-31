@@ -13,6 +13,7 @@ export enum ModelTypes {
   claude_3_5_sonnet_20240620 = "claude_3_5_sonnet_20240620",
   claude_3_5_sonnet = "claude_3_5_sonnet",
   claude_3_haiku = "claude_3_haiku",
+  claude_3_sonnet = "claude_3_sonnet",
 
   // # Mistral
   mistral_7b_instruct = "mistral_7b_instruct",
