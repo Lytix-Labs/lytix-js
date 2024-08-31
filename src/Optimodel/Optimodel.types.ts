@@ -18,6 +18,9 @@ export enum ModelTypes {
   // # Mistral
   mistral_7b_instruct = "mistral_7b_instruct",
   mixtral_8x7b_instruct = "mixtral_8x7b_instruct",
+  codestral_latest = "codestral_latest",
+  mistral_large_latest = "mistral_large_latest",
+  open_mistral_nemo = "open_mistral_nemo",
 
   // # OpenAI Related
   gpt_4 = "gpt_4",
@@ -112,9 +115,14 @@ export interface AWSBedrockCredentials {
   awsRegion: string;
 }
 
+export interface MistralAICredentials {
+  mistralAiKey: string;
+}
+
 export type Credentials =
   | TogetherAICredentials
   | OpenAICredentials
   | AWSBedrockCredentials
   | GroqCredentials
-  | AnthropicCredentials;
+  | AnthropicCredentials
+  | MistralAICredentials;

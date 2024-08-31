@@ -17,6 +17,7 @@ export {
   LLamaPromptGuardConfig,
   LytixRegexConfig,
   MicrosoftPresidioConfig,
+  MistralAICredentials,
   OpenAICredentials,
   QueryResponse,
   TogetherAICredentials,
