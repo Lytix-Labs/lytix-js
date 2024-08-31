@@ -10,8 +10,14 @@ export {
 export { queryModel };
 
 export {
+  AnthropicCredentials,
+  AWSBedrockCredentials,
+  Credentials,
+  GroqCredentials,
   LLamaPromptGuardConfig,
   LytixRegexConfig,
   MicrosoftPresidioConfig,
+  OpenAICredentials,
   QueryResponse,
+  TogetherAICredentials,
 } from "./Optimodel.types";

@@ -7,17 +7,27 @@ import LErrorIncrement from "./LError/LErrorIncrement";
 import { LLogger } from "./LLogger/LLogger";
 import MetricCollector from "./MetricCollector/index";
 import {
+  AnthropicCredentials,
+  AWSBedrockCredentials,
+  Credentials,
+  GroqCredentials,
   ModelImageMessageSource,
   ModelMessage,
   ModelMessageContentEntry,
   ModelTypes,
+  OpenAICredentials,
   Providers,
   SpeedPriority,
+  TogetherAICredentials,
 } from "./Optimodel/Optimodel.types";
 import { queryModel } from "./Optimodel/QueryModel";
 import LytixCreds from "./envVars";
 
 export {
+  AnthropicCredentials,
+  AWSBedrockCredentials,
+  Credentials,
+  GroqCredentials,
   LError,
   LErrorIncrement,
   LLogger,
@@ -27,7 +37,9 @@ export {
   ModelMessage,
   ModelMessageContentEntry,
   ModelTypes,
+  OpenAICredentials,
   Providers,
-  SpeedPriority,
   queryModel,
+  SpeedPriority,
+  TogetherAICredentials,
 };

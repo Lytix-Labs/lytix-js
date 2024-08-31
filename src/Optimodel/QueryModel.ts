@@ -1,5 +1,6 @@
 import LytixCreds from "../envVars";
 import {
+  Credentials,
   Guards,
   ModelMessage,
   ModelTypes,
@@ -23,6 +24,7 @@ export async function queryModel(args: {
   guards?: Guards[];
   timeout?: number;
   workflowName?: string;
+  credentials?: Credentials[];
 }): Promise<QueryResponse> {
   const {
     model,
@@ -39,6 +41,7 @@ export async function queryModel(args: {
     guards,
     timeout = 300000, // 5 minutes
     workflowName,
+    credentials,
   } = args;
   try {
     const allModels = [model, ...fallbackModels];
@@ -67,6 +70,7 @@ export async function queryModel(args: {
               sessionId: sessionId,
               guards: guards,
               workflowName: workflowName,
+              credentials: credentials,
             }),
             headers: {
               Authorization: `Bearer ${LytixCreds.LX_API_KEY}`,

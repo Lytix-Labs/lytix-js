@@ -88,3 +88,32 @@ export interface QueryResponse {
   provider: Providers;
   guardErrors: string[];
 }
+
+export interface TogetherAICredentials {
+  togetherApiKey: string;
+}
+
+export interface AnthropicCredentials {
+  anthropicApiKey: string;
+}
+
+export interface GroqCredentials {
+  groqApiKey: string;
+}
+
+export interface OpenAICredentials {
+  openAiKey: string;
+}
+
+export interface AWSBedrockCredentials {
+  awsAccessKeyId: string;
+  awsSecretKey: string;
+  awsRegion: string;
+}
+
+export type Credentials =
+  | TogetherAICredentials
+  | OpenAICredentials
+  | AWSBedrockCredentials
+  | GroqCredentials
+  | AnthropicCredentials;
