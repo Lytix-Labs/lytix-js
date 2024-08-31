@@ -21,6 +21,8 @@ export async function queryModel(args: {
   userId?: string;
   sessionId?: string;
   guards?: Guards[];
+  timeout?: number;
+  workflowName?: string;
 }): Promise<QueryResponse> {
   const {
     model,
@@ -35,6 +37,8 @@ export async function queryModel(args: {
     userId,
     sessionId,
     guards,
+    timeout = 300000, // 5 minutes
+    workflowName,
   } = args;
   try {
     const allModels = [model, ...fallbackModels];
@@ -43,6 +47,9 @@ export async function queryModel(args: {
       try {
         // Convert model enum to string
         const modelToUse = model.toString();
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
 
         const response = await fetch(
           `${LytixCreds.LX_BASE_URL.replace(/\/$/, "")}/optimodel/api/v1/query`,
@@ -59,13 +66,17 @@ export async function queryModel(args: {
               userId: userId,
               sessionId: sessionId,
               guards: guards,
+              workflowName: workflowName,
             }),
             headers: {
               Authorization: `Bearer ${LytixCreds.LX_API_KEY}`,
               "Content-Type": "application/json",
             },
+            signal: controller.signal,
           }
         );
+
+        clearTimeout(timeoutId);
 
         const jsonResponse = await response.json();
         if (!jsonResponse.modelResponse) {

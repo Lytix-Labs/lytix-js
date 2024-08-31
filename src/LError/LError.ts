@@ -28,12 +28,10 @@ class LError extends Error {
        * Send the logs + the metadata to Lytix
        * @note This is an unawaited promise
        */
-      metricCollector._captureMetricTrace({
-        metricName: "LError",
-        metricValue: 1,
-        metricMetadata: {
+      metricCollector._captureLError({
+        errorMsg: msg,
+        errorMetadata: {
           ...errorMetadata,
-          "$no-index:errorMessage": msg,
         },
         logs: asyncLogs,
       });

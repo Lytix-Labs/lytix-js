@@ -94,6 +94,30 @@ export class MetricCollector {
   }
 
   /**
+   * Capture LError event (logs + metadata)
+   * @note You likely never need to call this directly
+   */
+  public async _captureLError(args: {
+    errorMsg: string;
+    errorMetadata: { [key: string]: number | boolean | string };
+    logs?: string[];
+  }) {
+    const { errorMsg, errorMetadata, logs = [] } = args;
+    this.processingMetricMutex++;
+
+    const body = {
+      errorName: errorMsg,
+      timestamp: new Date().toISOString().slice(0, -3),
+      metadata: errorMetadata,
+      logs: logs,
+    };
+
+    await this.sendPostRequest("/lerror", body);
+
+    this.processingMetricMutex--;
+  }
+
+  /**
    * Capture a model input/output
    */
   public async captureModelIO(args: {

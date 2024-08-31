@@ -29,12 +29,10 @@ const LErrorIncrement = (
      * Send the logs + the metadata to Lytix
      * @note This is an unawaited promise
      */
-    metricCollector._captureMetricTrace({
-      metricName: "LError",
-      metricValue: 1,
-      metricMetadata: {
+    metricCollector._captureLError({
+      errorMsg: errorMsg,
+      errorMetadata: {
         ...errorMetadata,
-        "$no-index:errorMessage": errorMsg,
       },
       logs: asyncLogs,
     });
