@@ -25,6 +25,7 @@ export async function queryModel(args: {
   timeout?: number;
   workflowName?: string;
   credentials?: Credentials[];
+  cacheTTL?: number;
 }): Promise<QueryResponse> {
   const {
     model,
@@ -42,6 +43,7 @@ export async function queryModel(args: {
     timeout = 300000, // 5 minutes
     workflowName,
     credentials,
+    cacheTTL,
   } = args;
   try {
     const allModels = [model, ...fallbackModels];
@@ -71,6 +73,7 @@ export async function queryModel(args: {
               guards: guards,
               workflowName: workflowName,
               credentials: credentials,
+              cacheTTL: cacheTTL,
             }),
             headers: {
               Authorization: `Bearer ${LytixCreds.LX_API_KEY}`,
