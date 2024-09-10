@@ -39,6 +39,7 @@ export enum Providers {
   groq = "groq",
   anthropic = "anthropic",
   bedrock = "bedrock",
+  mistralai = "mistralai",
 }
 
 export interface ModelImageMessageSource {

@@ -1,5 +1,6 @@
 import {
   AWSBedrockCredentials,
+  MistralAICredentials,
   ModelTypes,
   OpenAICredentials,
   SpeedPriority,
@@ -19,6 +20,9 @@ function validator(x: string): boolean {
 }
 
 const main = async () => {
+  const mistralCreds: MistralAICredentials = {
+    mistralAiKey: "YOUR_MISTRAL_API_KEY",
+  };
   const prompt = "Hello How are you?";
   const response = await queryModel({
     model: ModelTypes.gpt_4o_mini,
@@ -31,6 +35,7 @@ const main = async () => {
     fallbackModels: [ModelTypes.gpt_4o],
     validator: validator,
     maxGenLen: 256,
+    credentials: [mistralCreds],
   });
   console.log(`Got response: ${response}`);
 };
