@@ -26,6 +26,7 @@ export async function queryModel(args: {
   workflowName?: string;
   credentials?: Credentials[];
   cacheTTL?: number;
+  metadata?: { [key: string]: string };
 }): Promise<QueryResponse> {
   const {
     model,
@@ -44,6 +45,7 @@ export async function queryModel(args: {
     workflowName,
     credentials,
     cacheTTL,
+    metadata,
   } = args;
   try {
     const allModels = [model, ...fallbackModels];
@@ -74,6 +76,7 @@ export async function queryModel(args: {
               workflowName: workflowName,
               credentials: credentials,
               cacheTTL: cacheTTL,
+              metadata: metadata,
             }),
             headers: {
               Authorization: `Bearer ${LytixCreds.LX_API_KEY}`,

@@ -31,6 +31,10 @@ export enum ModelTypes {
   gpt_4o_mini = "gpt_4o_mini",
   gpt_4o_mini_2024_07_18 = "gpt_4o_mini_2024_07_18",
   gpt_4o_2024_08_06 = "gpt_4o_2024_08_06",
+  o1_preview = "o1_preview",
+  o1_preview_2024_09_12 = "o1_preview_2024_09_12",
+  o1_mini = "o1_mini",
+  o1_mini_2024_09_12 = "o1_mini_2024_09_12",
 }
 
 export enum Providers {
@@ -40,6 +44,7 @@ export enum Providers {
   anthropic = "anthropic",
   bedrock = "bedrock",
   mistralai = "mistralai",
+  mistralcodestral = "mistralcodestral",
 }
 
 export interface ModelImageMessageSource {
@@ -120,10 +125,20 @@ export interface MistralAICredentials {
   mistralAiKey: string;
 }
 
+export interface MistralCodeStralCredentials {
+  mistralCodeStralApiKey: string;
+}
+
+export interface GeminiCredentials {
+  geminiApiKey: string;
+}
+
 export type Credentials =
   | TogetherAICredentials
   | OpenAICredentials
   | AWSBedrockCredentials
   | GroqCredentials
   | AnthropicCredentials
-  | MistralAICredentials;
+  | MistralAICredentials
+  | MistralCodeStralCredentials
+  | GeminiCredentials;
