@@ -1,6 +1,6 @@
 {
   "name": "@lytix/client",
-  "version": "4.9.3",
+  "version": "4.11.3",
   "description": "Official Lytix Client Packages",
   "main": "dist/index.js",
   "exports": {
@@ -20,11 +20,17 @@
   "author": "Lytixs Labs",
   "license": "MIT",
   "dependencies": {
+    "@azure/identity": "^4.4.1",
+    "@azure/storage-blob": "^12.25.0",
     "@lytix/client": "4.7",
     "@types/bunyan": "^1.8.11",
     "axios": "^1.6.7",
     "bunyan": "^1.8.15",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "uuid": "^10.0.0"
   },
-  "types": "./dist/index.d.ts"
+  "types": "./dist/index.d.ts",
+  "devDependencies": {
+    "@types/uuid": "^10.0.0"
+  }
 }

@@ -51,6 +51,7 @@ export class MetricCollector {
           `Failed to send to Lytix: ${res.status} with url: ${url}: ${res.body}`
         );
       }
+      return res;
     } catch (err) {
       this.logger.error(`Failed to send to Lytix: ${err}`, err);
     }
@@ -207,6 +208,32 @@ export class MetricCollector {
       );
     } finally {
       return assistantMessage;
+    }
+  }
+
+  /**
+   * Capture Azure Video URL
+   */
+  public async captureAzureVideoURL(args: {
+    videoURL: string;
+    mimeType: string;
+  }): Promise<string> {
+    const { videoURL, mimeType } = args;
+
+    const response = await this.sendPostRequest("/azureVideoURL", {
+      videoUrl: videoURL,
+      mimeType,
+    });
+    try {
+      if (!response) {
+        throw new Error("Failed to capture Azure Video URL");
+      }
+      const json = await response.json();
+      const id = json["id"];
+      return id;
+    } catch (err) {
+      this.logger.error(`Failed to capture Azure Video URL: ${err}`, err);
+      return "";
     }
   }
 }

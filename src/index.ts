@@ -12,6 +12,10 @@ import {
   Credentials,
   GeminiCredentials,
   GroqCredentials,
+  Guards,
+  LLamaPromptGuardConfig,
+  LytixRegexConfig,
+  MicrosoftPresidioConfig,
   MistralAICredentials,
   MistralCodeStralCredentials,
   ModelImageMessageSource,
@@ -24,6 +28,7 @@ import {
   TogetherAICredentials,
 } from "./Optimodel/Optimodel.types";
 import { queryModel } from "./Optimodel/QueryModel";
+import { UploadFileToAzureAndLytix } from "./Optimodel/UploadToAzureAndLytix";
 import LytixCreds from "./envVars";
 
 export {
@@ -32,11 +37,15 @@ export {
   Credentials,
   GeminiCredentials,
   GroqCredentials,
+  Guards,
   LError,
   LErrorIncrement,
+  LLamaPromptGuardConfig,
   LLogger,
   LytixCreds,
+  LytixRegexConfig,
   MetricCollector,
+  MicrosoftPresidioConfig,
   MistralAICredentials,
   MistralCodeStralCredentials,
   ModelImageMessageSource,
@@ -48,4 +57,5 @@ export {
   queryModel,
   SpeedPriority,
   TogetherAICredentials,
+  UploadFileToAzureAndLytix,
 };

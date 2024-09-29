@@ -1,4 +1,5 @@
 import { queryModel } from "./QueryModel";
+import { UploadFileToAzureAndLytix } from "./UploadToAzureAndLytix";
 export {
   ModelImageMessageSource,
   ModelMessage,
@@ -7,7 +8,7 @@ export {
   Providers,
   SpeedPriority,
 } from "./Optimodel.types";
-export { queryModel };
+export { queryModel, UploadFileToAzureAndLytix };
 
 export {
   AnthropicCredentials,

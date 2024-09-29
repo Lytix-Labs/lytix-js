@@ -142,3 +142,7 @@ export type Credentials =
   | MistralAICredentials
   | MistralCodeStralCredentials
   | GeminiCredentials;
+
+interface GuardQueryBase {
+  guardName: string;
+}
