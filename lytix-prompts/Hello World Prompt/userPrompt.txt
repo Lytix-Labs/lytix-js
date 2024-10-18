@@ -1,0 +1,4 @@
+{
+  "endpoint":"api/v1/user",
+  "title":"Error 500: Unable to process '/usr/jdoe/datafile_12345.json'"
+}

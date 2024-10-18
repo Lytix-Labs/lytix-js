@@ -1,0 +1,5 @@
+{
+  "id": "7a8b005d-13ec-4357-959a-ccd84f55ff18",
+  "promptName": "Hello World Prompt",
+  "promptDescription": "The job of this prompt is to return a json dict with the keys \"response\" and the value of that should always be \"Hello world!\""
+}

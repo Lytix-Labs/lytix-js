@@ -8,6 +8,9 @@
     "./Optimodel": "./dist/Optimodel/index.js",
     "./envVars": "./dist/envVars.js"
   },
+  "bin": {
+    "lytix": "./dist/CLI/main.js"
+  },
   "scripts": {
     "build": "tsc",
     "increment-example": "npm run build && node ./dist/examples/IncrementExample/index.js",
@@ -15,7 +18,8 @@
     "optimodel-example-image": "npm run build && cp ./src/examples/OptimodelExampleImage/image-test.png ./dist/examples/OptimodelExampleImage/image-test.png && node ./dist/examples/OptimodelExampleImage/index.js",
     "trace-example": "npm run build && node ./dist/examples/AsyncFunctionExample/index.js",
     "prepublishOnly": "npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cli": "npm run build && node ./dist/CLI/main.js"
   },
   "author": "Lytixs Labs",
   "license": "MIT",
@@ -26,11 +30,16 @@
     "@types/bunyan": "^1.8.11",
     "axios": "^1.6.7",
     "bunyan": "^1.8.15",
+    "colors": "^1.4.0",
+    "deep-diff": "^1.0.2",
     "typescript": "^5.4.5",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "yargs": "^17.7.2"
   },
   "types": "./dist/index.d.ts",
   "devDependencies": {
-    "@types/uuid": "^10.0.0"
+    "@types/deep-diff": "^1.0.5",
+    "@types/uuid": "^10.0.0",
+    "@types/yargs": "^17.0.33"
   }
 }
