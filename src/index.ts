@@ -2,6 +2,7 @@
  * Main file with all exports from the Lytix NPM packages
  */
 
+import { LytixAsyncLogger } from "./AsyncLogging/LytixAsyncLogging";
 import LError from "./LError/LError";
 import LErrorIncrement from "./LError/LErrorIncrement";
 import { LLogger } from "./LLogger/LLogger";
@@ -30,7 +31,6 @@ import {
 import { queryModel } from "./Optimodel/QueryModel";
 import { UploadFileToAzureAndLytix } from "./Optimodel/UploadToAzureAndLytix";
 import LytixCreds from "./envVars";
-
 export {
   AnthropicCredentials,
   AWSBedrockCredentials,
@@ -42,6 +42,7 @@ export {
   LErrorIncrement,
   LLamaPromptGuardConfig,
   LLogger,
+  LytixAsyncLogger,
   LytixCreds,
   LytixRegexConfig,
   MetricCollector,

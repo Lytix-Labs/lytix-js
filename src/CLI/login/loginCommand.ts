@@ -1,23 +1,39 @@
 import { execSync } from "child_process";
+import cliSelect from "cli-select";
 import colors from "colors";
 import fs from "fs";
 import os from "os";
 import path from "path";
-import { LX_API_KEY } from "../consts";
+import { LX_CLI_API_KEY } from "../consts";
 import { openBrowser, promptUser } from "../utils";
 
 export const loginHandler = async () => {
-  if (LX_API_KEY !== undefined) {
+  if (LX_CLI_API_KEY !== undefined) {
     const response = await promptUser(
       `${colors.yellow(
-        "🚨 It looks like you have already logged in. If you want to re-login, please press 1\n"
+        "🚨 It looks like you have already logged in. Would you like to re-login? (y/n)\n"
       )}`
     );
-    if (response !== "1") {
+    if (response !== "y") {
       console.log(`${colors.red("Login cancelled")}`);
       return;
     }
   }
+
+  /**
+   * Now verify the sever the user would like to use
+   */
+  console.log(colors.cyan("Select the server you would like to use:"));
+  const server = await cliSelect({
+    values: ["🇺🇸 https://api.lytix.co", "🇪🇺 https://eu.api.lytix.co"],
+    valueRenderer: (value, selected) => {
+      if (selected) {
+        return colors.cyan(value);
+      }
+
+      return value;
+    },
+  });
 
   /**
    * We need to direct the user to the browser to get an API key
@@ -34,12 +50,20 @@ export const loginHandler = async () => {
   );
 
   // Open the browser to the lytix console
-  openBrowser("https://lab.lytix.co/home/settings/api-keys");
+  const labUrl = server.value.includes("eu.api")
+    ? "https://eu.lab.lytix.co/home/settings/api-keys"
+    : "https://lab.lytix.co/home/settings/api-keys";
+  openBrowser(labUrl);
 
   /**
    * Now as the user for an API key
    */
   const apiKey = await promptUser(`${colors.cyan("Enter your API key:")}`);
+
+  let endpointToUse = "https://api.lytix.co";
+  if (server.value.includes("eu.api")) {
+    endpointToUse = "https://eu.api.lytix.co";
+  }
 
   /**
    * Now add this as an env var to the users bashrc or zshrc depending on what exists
@@ -61,12 +85,13 @@ export const loginHandler = async () => {
       // Read the current content of the config file
       let fileContent = fs.readFileSync(configFile, "utf8");
 
-      // Remove any existing LX_API_KEY export
-      fileContent = fileContent.replace(/^export LX_API_KEY=.*$/m, "");
+      // Remove any existing LX_CLI_API_KEY export
+      fileContent = fileContent.replace(/^export LX_CLI_API_KEY=.*$/m, "");
+      fileContent = fileContent.replace(/^export LX_CLI_BASE_URL=.*$/m, "");
 
-      // Append the new LX_API_KEY export
-      fileContent += `\nexport LX_API_KEY=${apiKey}\n`;
-
+      // Append the new LX_CLI_API_KEY export
+      fileContent += `\nexport LX_CLI_API_KEY=${apiKey}\n`;
+      fileContent += `\nexport LX_CLI_BASE_URL=${endpointToUse}\n`;
       // Write the updated content back to the file
       fs.writeFileSync(configFile, fileContent);
 

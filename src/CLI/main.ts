@@ -4,10 +4,12 @@ import { hideBin } from "yargs/helpers";
 import yargs from "yargs/yargs";
 import { loginHandler } from "./login/loginCommand";
 import { promptCommandBuilder } from "./prompt/promptCommand";
+import { testCommandBuilder } from "./test/testCommand";
 
 yargs(hideBin(process.argv))
   .scriptName("lytix")
   .command("prompt", "Manage and sync your lytix prompts", promptCommandBuilder)
+  // .command("tests", "Manage and sync your lytix tests", testCommandBuilder)
   .command(
     "login",
     "Login to your lytix account",
@@ -25,6 +27,11 @@ yargs(hideBin(process.argv))
         );
       }
     }
+  )
+  .command(
+    "agent-test",
+    "Manage and run your agentic tests",
+    testCommandBuilder
   )
   .option("verbose", {
     alias: "v",
