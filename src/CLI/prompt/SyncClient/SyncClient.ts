@@ -1,7 +1,7 @@
 import colors from "colors";
 import diff from "deep-diff";
 import fs from "fs";
-import HttpClient from "../HttpClient/HttpClient";
+import HttpClient from "../../HttpClient/HttpClient";
 
 enum SavedPromptVariableType {
   STRING = "STRING",
@@ -174,17 +174,11 @@ class _SyncClient {
       )}.prompt.types.ts`;
       fs.writeFileSync(typescriptFile, typesFileContent);
 
-      // Write systemPrompt.txt
-      fs.writeFileSync(
-        `${folderName}/systemPrompt.txt`,
-        prompt.promptVersion.modelPrompt
-      );
-
-      // Write userPrompt.txt
-      fs.writeFileSync(
-        `${folderName}/userPrompt.txt`,
-        prompt.promptVersion.userPrompt
-      );
+      const newMdxFileContent = this.createMdxInput({
+        userPrompt: prompt.promptVersion.userPrompt,
+        systemPrompt: prompt.promptVersion.modelPrompt,
+      });
+      fs.writeFileSync(`${folderName}/inputs.mdx`, newMdxFileContent);
     });
 
     if (!noLogs) {
@@ -224,14 +218,40 @@ class _SyncClient {
         const promptJson = JSON.parse(
           fs.readFileSync(`${folderName}/prompt.json`, "utf8")
         );
-        const systemPrompt = fs.readFileSync(
-          `${folderName}/systemPrompt.txt`,
-          "utf8"
-        );
-        const userPrompt = fs.readFileSync(
-          `${folderName}/userPrompt.txt`,
-          "utf8"
-        );
+        let userPrompt = "";
+        let systemPrompt = "";
+
+        try {
+          const mdxFileContent = fs.readFileSync(
+            `${folderName}/inputs.mdx`,
+            "utf8"
+          );
+
+          // Extract content using regex since we just need the raw content
+          // between custom components
+          const userPromptMatch = mdxFileContent.match(
+            /<UserPrompt>([\s\S]*?)<\/UserPrompt>/
+          );
+          const systemPromptMatch = mdxFileContent.match(
+            /<SystemPrompt>([\s\S]*?)<\/SystemPrompt>/
+          );
+
+          if (!userPromptMatch || !systemPromptMatch) {
+            throw new Error("Missing UserPrompt or SystemPrompt tags");
+          }
+
+          userPrompt = userPromptMatch[1].trim();
+          systemPrompt = systemPromptMatch[1].trim();
+        } catch (error) {
+          console.log(
+            colors.red(
+              `Error parsing MDX file for ${prompt.prompt.promptName}: ${
+                error instanceof Error ? error.message : "Unknown error"
+              }`
+            )
+          );
+          process.exit(1);
+        }
 
         /**
          * Validate each variables
@@ -336,13 +356,21 @@ class _SyncClient {
         differences = differences.concat(promptJsonDiffs);
 
         // Check systemPrompt.txt
-        const localSystemPrompt = fs.readFileSync(
-          `${folderName}/systemPrompt.txt`,
+        const localInputsMdx = fs.readFileSync(
+          `${folderName}/inputs.mdx`,
           "utf8"
         );
+
+        /**
+         * Create a string that has the systemPrompt and userPrompt
+         */
+        const upstreamInputsMdx = this.createMdxInput({
+          userPrompt: prompt.promptVersion.userPrompt,
+          systemPrompt: prompt.promptVersion.modelPrompt,
+        });
         const systemPromptDiffs = reverseDirection
-          ? diff(prompt.promptVersion.modelPrompt, localSystemPrompt) || []
-          : diff(localSystemPrompt, prompt.promptVersion.modelPrompt) || [];
+          ? diff(upstreamInputsMdx, localInputsMdx) || []
+          : diff(localInputsMdx, upstreamInputsMdx) || [];
 
         // Add path to each difference
         systemPromptDiffs.forEach((d) => {
@@ -350,20 +378,20 @@ class _SyncClient {
         });
         differences = differences.concat(systemPromptDiffs);
 
-        // Check userPrompt.txt
-        const localUserPrompt = fs.readFileSync(
-          `${folderName}/userPrompt.txt`,
-          "utf8"
-        );
-        const userPromptDiffs = reverseDirection
-          ? diff(prompt.promptVersion.userPrompt, localUserPrompt) || []
-          : diff(localUserPrompt, prompt.promptVersion.userPrompt) || [];
+        // // Check userPrompt.txt
+        // const localUserPrompt = fs.readFileSync(
+        //   `${folderName}/userPrompt.txt`,
+        //   "utf8"
+        // );
+        // const userPromptDiffs = reverseDirection
+        //   ? diff(prompt.promptVersion.userPrompt, localUserPrompt) || []
+        //   : diff(localUserPrompt, prompt.promptVersion.userPrompt) || [];
 
-        // Add path to each differenpromptJsonDiffsce
-        userPromptDiffs.forEach((d) => {
-          d.path = [prompt.prompt.promptName, "promptVersion", "userPrompt"];
-        });
-        differences = differences.concat(userPromptDiffs);
+        // // Add path to each differenpromptJsonDiffsce
+        // userPromptDiffs.forEach((d) => {
+        //   d.path = [prompt.prompt.promptName, "promptVersion", "userPrompt"];
+        // });
+        // differences = differences.concat(userPromptDiffs);
       } else {
         // New prompt
         // @ts-ignore
@@ -479,6 +507,19 @@ class _SyncClient {
         "Variable name can only contain letters, numbers, and underscores, and must start with a letter or underscore"
       );
     }
+  }
+
+  /**
+   * Create mdx input
+   */
+  private createMdxInput(args: { userPrompt: string; systemPrompt: string }) {
+    const { userPrompt, systemPrompt } = args;
+    return `<UserPrompt>
+${userPrompt}
+</UserPrompt>
+<SystemPrompt>
+${systemPrompt}
+</SystemPrompt>`;
   }
 }
 

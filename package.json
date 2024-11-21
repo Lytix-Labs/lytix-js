@@ -1,6 +1,6 @@
 {
   "name": "@lytix/client",
-  "version": "5.0.4",
+  "version": "5.1.0",
   "description": "Official Lytix Client Packages",
   "main": "dist/index.js",
   "exports": {
@@ -29,6 +29,8 @@
     "@azure/storage-blob": "^12.25.0",
     "@google-cloud/vertexai": "^1.9.0",
     "@lytix/client": "4.7",
+    "@mdx-js/mdx": "^3.1.0",
+    "@mdx-js/react": "^3.1.0",
     "@opentelemetry/exporter-trace-otlp-http": "^0.54.2",
     "@traceloop/node-server-sdk": "^0.11.3",
     "@types/bunyan": "^1.8.11",

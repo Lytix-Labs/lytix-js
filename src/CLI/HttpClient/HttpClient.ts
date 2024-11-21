@@ -1,6 +1,6 @@
 import colors from "colors";
 import { LX_CLI_API_KEY, LX_CLI_BASE_URL } from "../consts";
-import { PromptUpstream } from "../SyncClient/SyncClient";
+import { PromptUpstream } from "../prompt/SyncClient/SyncClient";
 import {
   AgentAsJudgeTestRunConfig,
   AgentAsJudgeTestRunTestResultsToTest,

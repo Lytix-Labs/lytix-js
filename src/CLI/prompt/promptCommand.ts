@@ -2,8 +2,8 @@ import colors from "colors";
 import { Argv } from "yargs";
 import { LX_CLI_API_KEY } from "../consts";
 import HttpClient from "../HttpClient/HttpClient";
-import SyncClient from "../SyncClient/SyncClient";
 import { promptUser } from "../utils";
+import SyncClient from "./SyncClient/SyncClient";
 
 const verifyAPIKey = async () => {
   if (!LX_CLI_API_KEY) {
